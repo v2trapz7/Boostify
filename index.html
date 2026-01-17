@@ -1,0 +1,652 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Boostify Tweaks</title>
+  <style>
+    :root{
+      --bg0:#05060a;
+      --bg1:#0b0d14;
+      --stroke: rgba(255,255,255,.08);
+      --stroke2: rgba(255,255,255,.12);
+      --text:#f2f5ff;
+      --muted:#a9b0c6;
+      --red:#e11d2e;
+      --red2:#ff3344;
+      --good:#19c37d;
+      --bad:#ff5c7a;
+      --warn:#f7c948;
+      --shadow: 0 20px 60px rgba(0,0,0,.55);
+      --radius: 20px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      background:
+        radial-gradient(900px 500px at 50% 25%, rgba(225,29,46,.22), transparent 60%),
+        radial-gradient(900px 500px at 15% 20%, rgba(225,29,46,.16), transparent 65%),
+        radial-gradient(1100px 650px at 85% 20%, rgba(255,255,255,.07), transparent 65%),
+        linear-gradient(180deg, var(--bg0), var(--bg1));
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:20px 16px 80px;}
+
+    header{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+      padding:12px 14px;
+      border:1px solid var(--stroke);
+      background: rgba(10,10,14,.55);
+      backdrop-filter: blur(10px);
+      border-radius: 999px;
+      box-shadow: var(--shadow);
+      position:sticky; top:16px; z-index:10;
+      flex-wrap:wrap;
+    }
+    .brand{display:flex; align-items:center; gap:10px; padding-left:6px;}
+    .logo{
+      width:36px; height:36px; border-radius: 12px;
+      background:
+        radial-gradient(14px 14px at 30% 30%, rgba(255,255,255,.30), transparent 60%),
+        linear-gradient(135deg, rgba(225,29,46,.95), rgba(255,51,68,.55));
+      box-shadow: 0 14px 40px rgba(225,29,46,.22);
+    }
+    .brandText{display:flex; flex-direction:column; line-height:1.05}
+    .brandText b{letter-spacing:.5px; font-size:14px}
+    .brandText span{color:var(--muted); font-size:12px}
+
+    .nav{
+      display:flex; align-items:center; gap:8px;
+      padding:6px;
+      border:1px solid var(--stroke);
+      border-radius: 999px;
+      background: rgba(0,0,0,.22);
+    }
+    .nav a{
+      text-decoration:none;
+      color:var(--muted);
+      font-weight:800;
+      font-size:13px;
+      padding:10px 14px;
+      border-radius: 999px;
+      transition: background .15s ease, color .15s ease, transform .08s ease;
+      cursor:pointer;
+      user-select:none;
+    }
+    .nav a:hover{background: rgba(255,255,255,.06); color:var(--text);}
+    .nav a.active{
+      background: rgba(225,29,46,.18);
+      color:var(--text);
+      box-shadow: inset 0 0 0 1px rgba(225,29,46,.35);
+    }
+
+    .right{
+      display:flex; align-items:center; gap:10px; justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-left:auto;
+    }
+    .pill{
+      display:flex; align-items:center; gap:8px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.20);
+      color:var(--muted);
+      border-radius: 999px;
+      padding:9px 12px;
+      font-size:12px;
+      max-width: 520px;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .dot{width:8px; height:8px; border-radius:999px; background:var(--warn)}
+    .dot.ok{background:var(--good)}
+    .dot.bad{background:var(--bad)}
+
+    .btn{
+      border:1px solid var(--stroke2);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius: 999px;
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:inline-flex; align-items:center; gap:10px;
+      transition: transform .08s ease, background .15s ease, border-color .15s ease, filter .15s ease;
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18);}
+    .btn:active{transform: translateY(0px);}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(225,29,46,.95), rgba(255,51,68,.55));
+      border-color: transparent;
+      box-shadow: 0 14px 45px rgba(225,29,46,.18);
+    }
+    .btn.primary:hover{filter:brightness(1.05)}
+    .btn.danger{
+      border-color: rgba(255,92,122,.55);
+      background: rgba(255,92,122,.10);
+    }
+
+    .hero{
+      margin-top:26px;
+      border-radius: 34px;
+      border: 1px solid var(--stroke);
+      background:
+        radial-gradient(900px 450px at 50% 0%, rgba(225,29,46,.18), transparent 65%),
+        radial-gradient(700px 420px at 15% 30%, rgba(225,29,46,.10), transparent 70%),
+        rgba(0,0,0,.18);
+      box-shadow: var(--shadow);
+      padding: 44px 22px 24px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background:
+        radial-gradient(250px 250px at 10% 60%, rgba(225,29,46,.15), transparent 70%),
+        radial-gradient(280px 280px at 90% 45%, rgba(255,255,255,.08), transparent 70%);
+      pointer-events:none;
+    }
+    .heroInner{position:relative; z-index:1; max-width: 920px; margin: 0 auto;}
+    .tag{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:8px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.22);
+      color: var(--muted);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .tag b{color: var(--text)}
+    .hero h1{
+      margin:14px 0 6px;
+      font-size: clamp(38px, 5vw, 62px);
+      letter-spacing:-.8px;
+      line-height:1.02;
+    }
+    .hero h1 .white{color: var(--text)}
+    .hero h1 .red{color: var(--red2); text-shadow: 0 0 28px rgba(225,29,46,.25);}
+    .sub{
+      margin:12px auto 0;
+      max-width: 860px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .grid{
+      margin-top: 16px;
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap:14px;
+    }
+    @media (max-width: 920px){
+      .grid{grid-template-columns: 1fr;}
+    }
+
+    .card{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: rgba(0,0,0,.18);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .cardTitle{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:.2px;
+      margin-bottom:10px;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size:12px;
+      padding:2px 8px;
+      border-radius:10px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.25);
+      color: var(--text);
+    }
+
+    .toast{
+      margin-top:10px;
+      padding:12px 12px;
+      border-radius: 16px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.20);
+      color: var(--text);
+      display:none;
+    }
+    .toast.show{display:block}
+    .toast.ok{border-color: rgba(25,195,125,.35); background: rgba(25,195,125,.10);}
+    .toast.bad{border-color: rgba(255,92,122,.35); background: rgba(255,92,122,.10);}
+    .toast.warn{border-color: rgba(247,201,72,.35); background: rgba(247,201,72,.10);}
+
+    .tier{
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+      border-radius: 18px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+    .tierTop{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+    .tierName{font-weight:950; letter-spacing:.2px;}
+    .price{color: var(--red2); font-weight:950;}
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background: rgba(225,29,46,.10);
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 900;
+      white-space:nowrap;
+    }
+    .tierList{margin:10px 0 0; color:var(--muted); font-size:13px; line-height:1.55;}
+    .bigAction{
+      width:100%;
+      justify-content:center;
+      padding:14px 16px;
+      border-radius: 18px;
+      font-size: 14px;
+      font-weight: 950;
+      margin-top: 10px;
+    }
+    .locked{opacity:.55; filter:saturate(.9);}
+    .row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px;}
+    .hint{margin:10px 0 0; color:var(--muted); font-size:13px; line-height:1.5;}
+
+    .page{display:none;}
+    .page.active{display:block;}
+    .tiles{
+      display:grid; grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:12px; margin-top:14px;
+    }
+    @media (max-width: 920px){ .tiles{grid-template-columns: 1fr;} }
+    .tile{
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 16px 45px rgba(0,0,0,.35);
+    }
+    .tile b{display:block; margin-bottom:6px;}
+    .tile span{color:var(--muted); font-size:13px; line-height:1.5; display:block;}
+    .small{font-size:12px;color:var(--muted);}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div class="brandText">
+          <b>BOOSTIFY</b>
+          <span>Basic (€2) + Pro (€5)</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="Main">
+        <a class="navLink active" data-page="home" href="#home">Home</a>
+        <a class="navLink" data-page="services" href="#services">Services</a>
+        <a class="navLink" data-page="utilities" href="#utilities">Utilities</a>
+        <a class="navLink" data-page="about" href="#about">About</a>
+      </nav>
+
+      <div class="right">
+        <div class="pill" id="pill" title="Account status">
+          <span class="dot" id="dot"></span>
+          <span id="pillText">Checking login…</span>
+        </div>
+
+        <a class="btn primary" id="loginBtn" href="/login">Log in with Discord</a>
+        <button class="btn danger" id="logoutBtn" style="display:none;">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- HOME -->
+      <section class="page active" id="page-home">
+        <section class="hero">
+          <div class="heroInner">
+            <div class="tag">⚡ <b>Boostify Tweaks</b> • Choose your tier</div>
+            <h1>
+              <span class="white">Basic Boost.</span><br />
+              <span class="red">Full Power.</span>
+            </h1>
+            <p class="sub">
+              Pay in Discord → you receive a role → log in here to unlock that tier.
+              <br/>
+              <span class="kbd">Paid - Pro</span> unlocks both downloads.
+            </p>
+          </div>
+        </section>
+
+        <div class="grid">
+          <!-- DOWNLOADS -->
+          <div class="card">
+            <div class="cardTitle">
+              <span>Downloads</span>
+              <span class="kbd" id="tierBadge">Locked</span>
+            </div>
+
+            <div class="tier">
+              <div class="tierTop">
+                <div>
+                  <div class="tierName">Basic Tweaks</div>
+                  <div class="small">Requires: <span class="kbd">Paid - Basic</span> or <span class="kbd">Paid - Pro</span></div>
+                </div>
+                <div class="price">€2</div>
+              </div>
+              <div class="tierList">
+                • Basic performance settings<br/>
+                • Safe + lightweight changes<br/>
+                • Good for most PCs
+              </div>
+
+              <a class="btn bigAction locked" id="downloadBasicBtn"
+                 href="/premium/files/basic.zip" style="pointer-events:none;">
+                🔒 Download Basic Tweaks
+              </a>
+            </div>
+
+            <div class="tier">
+              <div class="tierTop">
+                <div>
+                  <div class="tierName">Pro Tweaks</div>
+                  <div class="small">Requires: <span class="kbd">Paid - Pro</span></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span class="badge">Best Value</span>
+                  <div class="price">€5</div>
+                </div>
+              </div>
+              <div class="tierList">
+                • Full premium pack (your existing tweaks)<br/>
+                • Includes everything from Basic<br/>
+                • Extra utilities + presets
+              </div>
+
+              <a class="btn bigAction locked" id="downloadProBtn"
+                 href="/premium/files/pro.zip" style="pointer-events:none;">
+                🔒 Download Pro Tweaks
+              </a>
+            </div>
+
+            <div class="toast" id="toast"></div>
+
+            <p class="hint">
+              If you just got a role, click <span class="kbd">Refresh Access</span>.
+            </p>
+          </div>
+
+          <!-- ACCOUNT -->
+          <div class="card">
+            <div class="cardTitle">
+              <span>Account</span>
+              <span class="kbd" id="userId">—</span>
+            </div>
+
+            <p class="hint" style="margin-top:0">
+              The site checks your Discord roles via the backend.
+            </p>
+
+            <div class="toast show warn" id="accessBox">Loading status…</div>
+
+            <div class="row">
+              <button class="btn" id="refreshBtn">↻ Refresh Access</button>
+            </div>
+
+            <p class="hint">
+              If you’re logged in but still locked, you don’t have the roles yet.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="page" id="page-services">
+        <section class="card">
+          <h2 style="margin:0 0 8px">Services</h2>
+          <p style="margin:0;color:var(--muted);line-height:1.6">
+            Edit these cards to match what you offer.
+          </p>
+
+          <div class="tiles">
+            <div class="tile">
+              <b>✅ Basic (€2)</b>
+              <span>Entry pack for smoother performance and less background noise.</span>
+            </div>
+            <div class="tile">
+              <b>🔥 Pro (€5)</b>
+              <span>Full premium pack (your existing tweaks) + extras.</span>
+            </div>
+            <div class="tile">
+              <b>🧰 Support</b>
+              <span>Help with stutters, crashes, drivers, and Windows setup.</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- UTILITIES -->
+      <section class="page" id="page-utilities">
+        <section class="card">
+          <h2 style="margin:0 0 8px">Utilities</h2>
+          <p style="margin:0;color:var(--muted);line-height:1.6">
+            Quick tools for customers.
+          </p>
+
+          <div class="tiles">
+            <div class="tile">
+              <b>↻ Refresh Access</b>
+              <span>Re-check your roles if you just got Basic/Pro.</span>
+              <div class="row">
+                <button class="btn" id="utilRefreshBtn">Refresh Access</button>
+              </div>
+            </div>
+            <div class="tile">
+              <b>🎟️ Your tier</b>
+              <span id="utilTier" style="margin-top:6px;color:var(--muted);font-size:13px;display:block;">—</span>
+            </div>
+            <div class="tile">
+              <b>🧾 What to do</b>
+              <span>
+                1) Pay in Discord<br/>
+                2) Get role<br/>
+                3) Login here<br/>
+                4) Download
+              </span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="page" id="page-about">
+        <section class="card">
+          <h2 style="margin:0 0 8px">About</h2>
+          <p style="margin:0;color:var(--muted);line-height:1.6">
+            Boostify is a Discord role-gated portal:
+            <br/>• <span class="kbd">Paid - Basic</span> → Basic download
+            <br/>• <span class="kbd">Paid - Pro</span> → Pro download (and Basic too)
+          </p>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // --------- Pages (single-file SPA) ----------
+    const links = [...document.querySelectorAll(".navLink")];
+    const pages = {
+      home: document.getElementById("page-home"),
+      services: document.getElementById("page-services"),
+      utilities: document.getElementById("page-utilities"),
+      about: document.getElementById("page-about"),
+    };
+    function showPage(name){
+      for (const [k, el] of Object.entries(pages)) el.classList.toggle("active", k === name);
+      for (const a of links) a.classList.toggle("active", a.dataset.page === name);
+    }
+    function pageFromHash(){
+      const h = (location.hash || "#home").replace("#","");
+      return pages[h] ? h : "home";
+    }
+    window.addEventListener("hashchange", () => showPage(pageFromHash()));
+    showPage(pageFromHash());
+
+    // --------- Download helper ----------
+    function forceDownload(url){
+      // Using a real navigation click helps with cookies/auth + browser download handling
+      const a = document.createElement("a");
+      a.href = url;
+      a.rel = "noopener";
+      a.style.display = "none";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+
+    // --------- Auth + tier gating ----------
+    const pillText = document.getElementById("pillText");
+    const dot = document.getElementById("dot");
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userIdEl = document.getElementById("userId");
+
+    const downloadBasicBtn = document.getElementById("downloadBasicBtn");
+    const downloadProBtn = document.getElementById("downloadProBtn");
+    const accessBox = document.getElementById("accessBox");
+    const toast = document.getElementById("toast");
+    const tierBadge = document.getElementById("tierBadge");
+
+    const utilTier = document.getElementById("utilTier");
+
+    function setDot(state){
+      dot.className = "dot" + (state === "ok" ? " ok" : state === "bad" ? " bad" : "");
+    }
+
+    function lock(btn, label){
+      btn.classList.add("locked");
+      btn.style.pointerEvents = "none";
+      btn.textContent = "🔒 " + label;
+      btn.setAttribute("aria-disabled","true");
+    }
+    function unlock(btn, label, url){
+      btn.classList.remove("locked");
+      btn.style.pointerEvents = "auto";
+      btn.textContent = "⬇️ " + label;
+      btn.removeAttribute("aria-disabled");
+
+      // Make sure unlocked buttons actually download, not just look clickable.
+      btn.onclick = (e) => {
+        e.preventDefault();
+        forceDownload(url);
+      };
+    }
+
+    function showToast(type, msg){
+      toast.className = "toast show " + type;
+      toast.textContent = msg;
+      setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    async function refresh(){
+      lock(downloadBasicBtn, "Download Basic Tweaks");
+      lock(downloadProBtn, "Download Pro Tweaks");
+      downloadBasicBtn.onclick = null;
+      downloadProBtn.onclick = null;
+
+      tierBadge.textContent = "Locked";
+      setDot("");
+      pillText.textContent = "Checking login…";
+      accessBox.className = "toast show warn";
+      accessBox.textContent = "Loading status…";
+      userIdEl.textContent = "—";
+      if (utilTier) utilTier.textContent = "—";
+
+      try{
+        const res = await fetch("/api/me", { credentials: "include" });
+
+        if (res.status === 401){
+          setDot("bad");
+          pillText.textContent = "Not logged in";
+          accessBox.className = "toast show bad";
+          accessBox.textContent = "You are not logged in. Click “Log in with Discord”.";
+          loginBtn.style.display = "inline-flex";
+          logoutBtn.style.display = "none";
+          return;
+        }
+
+        const data = await res.json();
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-flex";
+        userIdEl.textContent = data.discord_user_id || "—";
+
+        // backend returns: has_basic, has_pro
+        const hasBasic = !!data.has_basic;
+        const hasPro = !!data.has_pro;
+
+        // Pro implies Basic in UI
+        const basicAccess = hasBasic || hasPro;
+        const proAccess = hasPro;
+
+        const parts = [];
+        if (basicAccess) parts.push("Basic ✅");
+        if (proAccess) parts.push("Pro ✅");
+
+        pillText.textContent =
+          `Logged in as ${data.username || "Unknown"} • ${parts.length ? parts.join(" • ") : "No paid roles"}`;
+
+        if (basicAccess) unlock(downloadBasicBtn, "Download Basic Tweaks", "/premium/files/basic.zip");
+        if (proAccess) unlock(downloadProBtn, "Download Pro Tweaks", "/premium/files/pro.zip");
+
+        if (proAccess) tierBadge.textContent = "PRO";
+        else if (basicAccess) tierBadge.textContent = "BASIC";
+        else tierBadge.textContent = "Locked";
+
+        if (utilTier) utilTier.textContent = parts.length ? `Your access: ${parts.join(" • ")}` : "Your access: none";
+
+        if (basicAccess || proAccess){
+          setDot("ok");
+          accessBox.className = "toast show ok";
+          accessBox.textContent = "✅ Access detected. Downloads unlock based on your roles.";
+          if (parts.length) showToast("ok", "Unlocked: " + parts.join(", "));
+        } else {
+          setDot("bad");
+          accessBox.className = "toast show bad";
+          accessBox.textContent = "❌ No access roles found. You are logged in but don’t have Basic/Pro.";
+        }
+
+      } catch(e){
+        setDot("bad");
+        pillText.textContent = "Offline";
+        accessBox.className = "toast show warn";
+        accessBox.textContent = "Server offline. Start it in VS Code terminal: node server.js";
+      }
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", refresh);
+    const utilRefreshBtn = document.getElementById("utilRefreshBtn");
+    if (utilRefreshBtn) utilRefreshBtn.addEventListener("click", refresh);
+
+    logoutBtn.addEventListener("click", async () => {
+      await fetch("/logout", { method: "POST", credentials: "include" });
+      location.reload();
+    });
+
+    refresh();
+  </script>
+</body>
+</html>
